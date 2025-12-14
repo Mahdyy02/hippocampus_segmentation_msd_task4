@@ -1,0 +1,146 @@
+[
+  {
+    "config": {
+      "base_channels": 32,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": true,
+      "inr_hidden_dim": 64
+    },
+    "config_str": "nnUNet_BC32_D4_INR64_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.8256598587792654,
+      "final_dice_anterior": 0.8423602566154849,
+      "final_dice_posterior": 0.8036471808514295,
+      "final_nsd_anterior": 0.7486866892449207,
+      "final_nsd_posterior": 0.7264414599865302,
+      "mean_dice": 0.8230037187334571,
+      "mean_nsd": 0.7375640746157255,
+      "num_params": 7765923
+    },
+    "timestamp": "20251214_090730"
+  },
+  {
+    "config": {
+      "base_channels": 32,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": true,
+      "inr_hidden_dim": 128
+    },
+    "config_str": "nnUNet_BC32_D4_INR128_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.8305590400896155,
+      "final_dice_anterior": 0.8423474349957119,
+      "final_dice_posterior": 0.80354342992123,
+      "final_nsd_anterior": 0.7451823631316563,
+      "final_nsd_posterior": 0.7279679436447607,
+      "mean_dice": 0.8229454324584708,
+      "mean_nsd": 0.7365751533882086,
+      "num_params": 7768355
+    },
+    "timestamp": "20251214_094904"
+  },
+  {
+    "config": {
+      "base_channels": 32,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": true,
+      "inr_hidden_dim": 256
+    },
+    "config_str": "nnUNet_BC32_D4_INR256_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.8268210832089282,
+      "final_dice_anterior": 0.8410741828537236,
+      "final_dice_posterior": 0.8033013911527764,
+      "final_nsd_anterior": 0.7416959421822971,
+      "final_nsd_posterior": 0.7233185617601147,
+      "mean_dice": 0.82218778700325,
+      "mean_nsd": 0.7325072519712059,
+      "num_params": 7773219
+    },
+    "timestamp": "20251214_103414"
+  },
+  {
+    "config": {
+      "base_channels": 48,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": true,
+      "inr_hidden_dim": 64
+    },
+    "config_str": "nnUNet_BC48_D4_INR64_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.8281894931464225,
+      "final_dice_anterior": 0.8376751438780234,
+      "final_dice_posterior": 0.8030755686350803,
+      "final_nsd_anterior": 0.7426625790071703,
+      "final_nsd_posterior": 0.7270590412380383,
+      "mean_dice": 0.8203753562565519,
+      "mean_nsd": 0.7348608101226043,
+      "num_params": 17466291
+    },
+    "timestamp": "20251214_113913"
+  },
+  {
+    "config": {
+      "base_channels": 48,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": true,
+      "inr_hidden_dim": 128
+    },
+    "config_str": "nnUNet_BC48_D4_INR128_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.82921505611167,
+      "final_dice_anterior": 0.845085427735765,
+      "final_dice_posterior": 0.8046997365577576,
+      "final_nsd_anterior": 0.7502759666493805,
+      "final_nsd_posterior": 0.7287386496119683,
+      "mean_dice": 0.8248925821467613,
+      "mean_nsd": 0.7395073081306744,
+      "num_params": 17469747
+    },
+    "timestamp": "20251214_124548"
+  },
+  {
+    "config": {
+      "base_channels": 48,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": true,
+      "inr_hidden_dim": 256
+    },
+    "config_str": "nnUNet_BC48_D4_INR256_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.828197013725463,
+      "final_dice_anterior": 0.8426001074628379,
+      "final_dice_posterior": 0.8087279082474927,
+      "final_nsd_anterior": 0.7501979216289828,
+      "final_nsd_posterior": 0.7313373644423002,
+      "mean_dice": 0.8256640078551654,
+      "mean_nsd": 0.7407676430356416,
+      "num_params": 17476659
+    },
+    "timestamp": "20251214_135553"
+  }
+]

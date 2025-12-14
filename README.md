@@ -358,20 +358,38 @@ Both perform hyperparameter optimization:
 
 **Grid Search Results (2D):**
 
-| Config | Dice (Ant) | Dice (Post) | Mean Dice | Parameters |
-|--------|------------|-------------|-----------|------------|
-| **No INR** | 0.839 | 0.805 | **0.822** | 7.76M |
-| INR-32 | 0.841 | 0.803 | 0.822 | 7.76M |
-| INR-48 | 0.841 | 0.805 | 0.823 | 7.77M |
-| **INR-64** | 0.842 | 0.802 | **0.822** | 7.77M |
+**Small Models (BC=32, Depth=4):**
 
-![Grid Search Analysis](finetuning_results-2d/small_grid_search_analysis.png)
-*Figure: Comparison of different model configurations showing minimal impact of INR head on 2D performance*
+| Config | Dice (Ant) | Dice (Post) | Mean Dice | NSD (Ant) | NSD (Post) | Mean NSD | Parameters |
+|--------|------------|-------------|-----------|-----------|------------|----------|------------|
+| **No INR** | 0.839 | 0.805 | **0.822** | 0.743 | 0.724 | 0.734 | 7.76M |
+| INR-32 | 0.841 | 0.803 | 0.822 | 0.745 | 0.723 | 0.734 | 7.76M |
+| INR-48 | 0.841 | 0.805 | 0.823 | 0.748 | 0.729 | 0.738 | 7.77M |
+| **INR-64** | 0.842 | 0.802 | **0.822** | 0.746 | 0.726 | 0.736 | 7.77M |
+| INR-128 | 0.842 | 0.804 | 0.823 | 0.745 | 0.728 | 0.737 | 7.77M |
+| INR-256 | 0.841 | 0.803 | 0.822 | 0.742 | 0.723 | 0.733 | 7.77M |
+
+![Small Models Analysis](finetuning_results-2D/small_grid_search_analysis.png)
+*Figure: Comparison of small model configurations (BC=32) with varying INR capacities*
+
+**Bigger Models (BC=48, Depth=4):**
+
+| Config | Dice (Ant) | Dice (Post) | Mean Dice | NSD (Ant) | NSD (Post) | Mean NSD | Parameters |
+|--------|------------|-------------|-----------|-----------|------------|----------|------------|
+| INR-64 | 0.838 | 0.803 | 0.820 | 0.743 | 0.727 | 0.735 | 17.47M |
+| INR-128 | 0.845 | 0.805 | **0.825** | 0.750 | 0.729 | 0.740 | 17.47M |
+| **INR-256** | 0.843 | 0.809 | **0.826** | 0.750 | 0.731 | **0.741** | 17.48M |
+
+![Bigger Models Analysis](finetuning_results-2D/bigger_grid_search_analysis.png)
+*Figure: Comparison of bigger model configurations (BC=48) showing improved performance with larger capacity*
 
 **Findings:**
-- INR head provides marginal improvement (~0.1%) on 2D data
-- Standard nnU-Net without INR is recommended for 2D tasks
-- 3D model with volumetric context significantly outperforms all 2D variants
+- **Small Models (BC=32)**: INR head provides marginal improvement (~0.1%) on 2D data
+- **Bigger Models (BC=48)**: Show +0.4% Dice improvement (82.6% vs 82.2%) and better NSD scores
+- **Best 2D Configuration**: BC=48 with INR-256 achieves 82.6% mean Dice (still significantly behind 3D)
+- **Trade-off**: Bigger models use 2.25× parameters (17.5M vs 7.8M) for modest gains
+- **Recommendation**: Standard nnU-Net (BC=32, no INR) offers best efficiency for 2D tasks
+- **3D Superiority**: 3D model with volumetric context significantly outperforms all 2D variants (98.9% vs 82.6%)
 
 ---
 
