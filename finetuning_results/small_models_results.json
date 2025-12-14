@@ -1,0 +1,98 @@
+[
+  {
+    "config": {
+      "base_channels": 32,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": false,
+      "inr_hidden_dim": 32
+    },
+    "config_str": "nnUNet_BC32_D4_NoINR_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.8277341086893049,
+      "final_dice_anterior": 0.8389212272874215,
+      "final_dice_posterior": 0.8046963257110145,
+      "final_nsd_anterior": 0.7432832239151708,
+      "final_nsd_posterior": 0.7241399443045793,
+      "mean_dice": 0.8218087764992179,
+      "mean_nsd": 0.733711584109875,
+      "num_params": 7763587
+    },
+    "timestamp": "20251213_230252"
+  },
+  {
+    "config": {
+      "base_channels": 32,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": true,
+      "inr_hidden_dim": 32
+    },
+    "config_str": "nnUNet_BC32_D4_INR32_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.826283632658231,
+      "final_dice_anterior": 0.8413298328200148,
+      "final_dice_posterior": 0.8034120698539047,
+      "final_nsd_anterior": 0.7447023394295672,
+      "final_nsd_posterior": 0.723047382419781,
+      "mean_dice": 0.8223709513369597,
+      "mean_nsd": 0.7338748609246741,
+      "num_params": 7764707
+    },
+    "timestamp": "20251213_234303"
+  },
+  {
+    "config": {
+      "base_channels": 32,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": true,
+      "inr_hidden_dim": 48
+    },
+    "config_str": "nnUNet_BC32_D4_INR48_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.8260408149258051,
+      "final_dice_anterior": 0.8412071773861973,
+      "final_dice_posterior": 0.8048084839653128,
+      "final_nsd_anterior": 0.7476184800676593,
+      "final_nsd_posterior": 0.7292242991215936,
+      "mean_dice": 0.8230078306757551,
+      "mean_nsd": 0.7384213895946264,
+      "num_params": 7765315
+    },
+    "timestamp": "20251214_002310"
+  },
+  {
+    "config": {
+      "base_channels": 32,
+      "unet_depth": 4,
+      "learning_rate": 0.0001,
+      "weight_decay": 1e-05,
+      "num_epochs": 50,
+      "use_amp": true,
+      "use_inr": true,
+      "inr_hidden_dim": 64
+    },
+    "config_str": "nnUNet_BC32_D4_INR64_LR1e-04_WD1e-05",
+    "metrics": {
+      "best_dice": 0.8283921625664155,
+      "final_dice_anterior": 0.8415362543744855,
+      "final_dice_posterior": 0.8018162874711885,
+      "final_nsd_anterior": 0.7463634351381462,
+      "final_nsd_posterior": 0.726024886915436,
+      "mean_dice": 0.821676270922837,
+      "mean_nsd": 0.736194161026791,
+      "num_params": 7765923
+    },
+    "timestamp": "20251214_010342"
+  }
+]
