@@ -140,7 +140,21 @@ We trained both 2D and 3D versions of the model on the Medical Segmentation Deca
 
 ✅ **Stable Learning**: Model converged smoothly from 45% → 83% Dice  
 ✅ **No Overfitting**: Val and train curves closely aligned  
-⚠️ **Plateau at Epoch 24**: Performance plateaued, suggesting need for more aggressive data augmentation
+⚠️ **Plateau at Epoch 24**: Performance plateaped, suggesting need for more aggressive data augmentation
+
+**2D Model Prediction Examples:**
+
+![2D Predictions - Initial Model](dummy_model_results/predictions.png)
+*Figure: Initial 2D model predictions showing segmentation quality on validation samples*
+
+![2D Predictions - Improved Model](improved_model_results/predictions.png)
+*Figure: Improved 2D model predictions with enhanced boundary accuracy and reduced false positives*
+
+![2D Training Curves - Initial](dummy_model_results/training_curves.png)
+*Figure: Training curves for initial 2D model showing loss and Dice score progression*
+
+![2D Training Curves - Improved](improved_model_results/training_curves.png)
+*Figure: Training curves for improved 2D model with optimized hyperparameters*
 
 ---
 
@@ -257,6 +271,9 @@ This generates an interactive 3D rendering using PyVista showing:
 - Brain surface (semi-transparent gray)
 - Hippocampus structure (crimson red)
 - Anatomical orientation axes
+
+![3D Hippocampus Visualization](3D_vis.png)
+*Figure 4: 3D volumetric rendering of hippocampus structures within the brain, showing anatomical positioning and spatial relationships.*
 
 ---
 
