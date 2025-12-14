@@ -144,16 +144,16 @@ We trained both 2D and 3D versions of the model on the Medical Segmentation Deca
 
 **2D Model Prediction Examples:**
 
-![2D Predictions - Initial Model](dummy_model_results/predictions.png)
+![2D Predictions - Initial Model](dummy_model_results-2d/predictions.png)
 *Figure: Initial 2D model predictions showing segmentation quality on validation samples*
 
-![2D Predictions - Improved Model](improved_model_results/predictions.png)
+![2D Predictions - Improved Model](improved_model_results-2d/predictions.png)
 *Figure: Improved 2D model predictions with enhanced boundary accuracy and reduced false positives*
 
-![2D Training Curves - Initial](dummy_model_results/training_curves.png)
+![2D Training Curves - Initial](dummy_model_results-2d/training_curves.png)
 *Figure: Training curves for initial 2D model showing loss and Dice score progression*
 
-![2D Training Curves - Improved](improved_model_results/training_curves.png)
+![2D Training Curves - Improved](improved_model_results-2d/training_curves.png)
 *Figure: Training curves for improved 2D model with optimized hyperparameters*
 
 ---
@@ -173,13 +173,13 @@ We trained both 2D and 3D versions of the model on the Medical Segmentation Deca
 
 **3D Model Training Plots:**
 
-![3D Training Loss](results_hippocampus/plots/loss_train_vs_val.png)
+![3D Training Loss](results_hippocampus-3D/plots/loss_train_vs_val.png)
 *Figure: Training and validation loss curves showing smooth convergence*
 
-![3D Dice Scores](results_hippocampus/plots/dice_train_vs_val.png)
+![3D Dice Scores](results_hippocampus-3D/plots/dice_train_vs_val.png)
 *Figure: Dice scores for anterior and posterior hippocampus across training*
 
-![3D NSD Scores](results_hippocampus/plots/val_nsd.png)
+![3D NSD Scores](results_hippocampus-3D/plots/val_nsd.png)
 *Figure: Normalized Surface Distance metrics showing excellent boundary accuracy*
 
 **3D Key Observations:**
@@ -322,7 +322,7 @@ python train2d.py
 This will:
 - Load 2D slices from `dataset_2d/`
 - Train for 100 epochs (~2-3 hours)
-- Save to `checkpoints/best_model.pth`
+- Save to `checkpoints-2d/best_model.pth`
 - Expected Dice: ~83%
 
 **Option B: Train 3D Model (Best Performance)**
@@ -330,12 +330,20 @@ This will:
 ```bash
 python train_3d.py
 ```
- (Optional)
 
-**2D Grid Search:**
-```bash
-python grid_search.py
-```
+This will:
+- Load full 3D volumes from `Task04_Hippocampus/`
+- Train for 100 epochs (~24 hours)
+- Save to `results_hippocampus-3D/best_model.pth`
+- Expected Dice: **~99%** ⭐
+
+Both training scripts:
+- Split data into 80/20 train/val
+- Use mixed precision (AMP) for faster training
+- Display live metrics with tqdm progress bars
+- Save training history and checkpoints
+
+#### 4. Run Grid Search (Optional)
 
 **3D Grid Search:**
 ```bash
@@ -357,10 +365,20 @@ Both perform hyperparameter optimization:
 | INR-48 | 0.841 | 0.805 | 0.823 | 7.77M |
 | **INR-64** | 0.842 | 0.802 | **0.822** | 7.77M |
 
-![Grid Search Analysis](finetuning_results/small_grid_search_analysis.png)
+![Grid Search Analysis](finetuning_results-2d/small_grid_search_analysis.png)
 *Figure: Comparison of different model configurations showing minimal impact of INR head on 2D performance*
 
 **Findings:**
+- INR head provides marginal improvement (~0.1%) on 2D data
+- Standard nnU-Net without INR is recommended for 2D tasks
+- 3D model with volumetric context significantly outperforms all 2D variants
+
+---
+
+## 🏋️ Training
+
+### Model Creation
+
 **2D Model:**
 ```python
 from model2d import UNetnnUNetWithINR
