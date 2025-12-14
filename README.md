@@ -144,16 +144,16 @@ We trained both 2D and 3D versions of the model on the Medical Segmentation Deca
 
 **2D Model Prediction Examples:**
 
-![2D Predictions - Initial Model](dummy_model_results-2d/predictions.png)
+![2D Predictions - Initial Model](dummy_model_results-2D/predictions.png)
 *Figure: Initial 2D model predictions showing segmentation quality on validation samples*
 
-![2D Predictions - Improved Model](improved_model_results-2d/predictions.png)
+![2D Predictions - Improved Model](improved_model_results-2D/predictions.png)
 *Figure: Improved 2D model predictions with enhanced boundary accuracy and reduced false positives*
 
-![2D Training Curves - Initial](dummy_model_results-2d/training_curves.png)
+![2D Training Curves - Initial](dummy_model_results-2D/training_curves.png)
 *Figure: Training curves for initial 2D model showing loss and Dice score progression*
 
-![2D Training Curves - Improved](improved_model_results-2d/training_curves.png)
+![2D Training Curves - Improved](improved_model_results-2D/training_curves.png)
 *Figure: Training curves for improved 2D model with optimized hyperparameters*
 
 ---

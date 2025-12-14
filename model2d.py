@@ -311,7 +311,7 @@ class UNetnnUNetStyle(nn.Module):
 
 
 # =============================================================================
-# 4. FULL MODEL - EXACTLY AS YOUR CORRECTED DIAGRAM
+# 4. FULL MODEL
 # =============================================================================
 
 class UNetWithINR(nn.Module):

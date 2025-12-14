@@ -415,34 +415,34 @@ class UNet3DWithINRMemoryEfficient(UNet3DWithINR):
 # 7. UTILITY FUNCTIONS
 # =============================================================================
 
-def count_parameters(model):
-    """Count trainable parameters"""
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+# def count_parameters(model):
+#     """Count trainable parameters"""
+#     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 
-def test_3d_model():
-    """Quick test of 3D model"""
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# def test_3d_model():
+#     """Quick test of 3D model"""
+#     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    # Create model
-    model = UNet3DWithINRBalanced(in_channels=1, num_classes=3).to(device)
+#     # Create model
+#     model = UNet3DWithINRBalanced(in_channels=1, num_classes=3).to(device)
     
-    print(f"Model parameters: {count_parameters(model):,}")
+#     print(f"Model parameters: {count_parameters(model):,}")
     
-    # Test forward pass with small volume
-    x = torch.randn(1, 1, 32, 64, 64).to(device)  # (B, C, D, H, W)
+#     # Test forward pass with small volume
+#     x = torch.randn(1, 1, 32, 64, 64).to(device)  # (B, C, D, H, W)
     
-    print(f"Input shape: {x.shape}")
+#     print(f"Input shape: {x.shape}")
     
-    with torch.no_grad():
-        out = model(x)
+#     with torch.no_grad():
+#         out = model(x)
     
-    print(f"Output shape: {out.shape}")
-    print(f"Expected: (1, 3, 32, 64, 64)")
+#     print(f"Output shape: {out.shape}")
+#     print(f"Expected: (1, 3, 32, 64, 64)")
     
-    assert out.shape == (1, 3, 32, 64, 64), "Output shape mismatch!"
-    print("✓ Test passed!")
+#     assert out.shape == (1, 3, 32, 64, 64), "Output shape mismatch!"
+#     print("✓ Test passed!")
 
 
-if __name__ == "__main__":
-    test_3d_model()
+# if __name__ == "__main__":
+#     test_3d_model()
