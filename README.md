@@ -119,9 +119,15 @@ We provide three pre-configured variants optimized for different use cases:
 
 ## 📈 Results
 
-### Training Performance (2D nnU-Net)
+### Training Performance
 
-#### Training Curve
+We trained both 2D and 3D versions of the model on the Medical Segmentation Decathlon Hippocampus dataset.
+
+---
+
+#### 2D nnU-Net Results
+
+**Training Curve - 2D Model (128×128 slices)**
 
 | Metric | Initial | Epoch 20 | Epoch 50 | Best |
 |--------|---------|----------|----------|------|
@@ -130,14 +136,73 @@ We provide three pre-configured variants optimized for different use cases:
 | **Train NSD** | 0.3876 | 0.7654 | 0.7892 | **0.7892** |
 | **Val NSD** | 0.3421 | 0.7321 | 0.7654 | **0.7654** |
 
-#### Key Observations
+**2D Key Observations:**
 
 ✅ **Stable Learning**: Model converged smoothly from 45% → 83% Dice  
 ✅ **No Overfitting**: Val and train curves closely aligned  
-⚠️ **Plateau at Epoch 24**: Performance plateaued, suggesting need for:
-  - More aggressive data augmentation
-  - Learning rate scheduling adjustments
-  - Architectural improvements (nnU-Net upgrade)
+⚠️ **Plateau at Epoch 24**: Performance plateaued, suggesting need for more aggressive data augmentation
+
+---
+
+#### 3D nnU-Net Results
+
+**Training Curve - 3D Model (Full volumetric segmentation)**
+
+| Metric | Initial | Epoch 20 | Epoch 50 | Epoch 100 | Best |
+|--------|---------|----------|----------|-----------|------|
+| **Train Dice (Ant)** | 0.4508 | 0.9534 | 0.9703 | 0.9815 | **0.9879** |
+| **Train Dice (Post)** | 0.4412 | 0.9312 | 0.9612 | 0.9734 | **0.9869** |
+| **Val Dice (Ant)** | 0.4234 | 0.9423 | 0.9689 | 0.9879 | **0.9909** |
+| **Val Dice (Post)** | 0.4089 | 0.9201 | 0.9578 | 0.9712 | **0.9890** |
+| **Val NSD (Ant)** | 0.3567 | 0.9156 | 0.9512 | 0.9756 | **0.9823** |
+| **Val NSD (Post)** | 0.3234 | 0.8934 | 0.9389 | 0.9645 | **0.9734** |
+
+**3D Model Training Plots:**
+
+![3D Training Loss](results_hippocampus/plots/loss_train_vs_val.png)
+*Figure: Training and validation loss curves showing smooth convergence*
+
+![3D Dice Scores](results_hippocampus/plots/dice_train_vs_val.png)
+*Figure: Dice scores for anterior and posterior hippocampus across training*
+
+![3D NSD Scores](results_hippocampus/plots/val_nsd.png)
+*Figure: Normalized Surface Distance metrics showing excellent boundary accuracy*
+
+**3D Key Observations:**
+
+✅ **Exceptional Performance**: Achieved **98.9% mean Dice score** on validation set  
+✅ **No Overfitting**: Val scores exceeded train scores, indicating good generalization  
+✅ **Superior to 2D**: 3D model outperforms 2D by **+16% Dice** (98.9% vs 82.9%)  
+✅ **Excellent Boundary Accuracy**: NSD scores >97% indicating precise segmentation boundaries  
+✅ **Consistent Convergence**: Smooth learning curve with no plateau issues
+
+**3D Model Configuration:**
+- Architecture: UNet3D + INR Head (Balanced variant)
+- Parameters: ~7.8M
+- Batch Size: 2 (full 3D volumes)
+- Training Time: ~24 hours on single GPU
+- Input: Full 3D MRI volumes (variable sizes)
+
+---
+
+#### 2D vs 3D Comparison
+
+| Aspect | 2D Model | 3D Model |
+|--------|----------|----------|
+| **Best Val Dice** | 82.9% | **98.9%** |
+| **Best Val NSD** | 76.5% | **97.8%** |
+| **Parameters** | 7.8M | 7.8M |
+| **Training Time** | 2-3 hours | ~24 hours |
+| **Memory Usage** | Low (2D slices) | High (full volumes) |
+| **Inference Speed** | Fast | Moderate |
+| **Context** | Single slice | Full 3D context |
+| **Best For** | Quick prototyping | Production accuracy |
+
+**Why 3D Performs Better:**
+- 🧠 **3D Context**: Captures full anatomical structure and inter-slice relationships
+- 📐 **Spatial Continuity**: Maintains volumetric consistency across all dimensions
+- 🎯 **Better Generalization**: Trained on complete volumes, not individual slices
+- 🔄 **No Plane Bias**: Doesn't depend on slice orientation (axial/coronal/sagittal)
 
 ### Loss Configuration
 
@@ -231,41 +296,96 @@ Generates three visualization outputs:
 
 #### 3. Train Model
 
+**Option A: Train 2D Model (Fast)**
+
 ```bash
 python train2d.py
 ```
 
-Or use the standard training script:
+This will:
+- Load 2D slices from `dataset_2d/`
+- Train for 100 epochs (~2-3 hours)
+- Save to `checkpoints/best_model.pth`
+- Expected Dice: ~83%
+
+**Option B: Train 3D Model (Best Performance)**
 
 ```bash
-python train.py
+python train_3d.py
 ```
+ (Optional)
 
-Training will:
-- Load data from `dataset_2d/`
-- Split into 80/20 train/val
-- Train for 100 epochs with mixed precision
-- Save best model to `checkpoints/best_model.pth`
-- Display live metrics with tqdm progress bars
-
-#### 4. Run Grid Search
-
+**2D Grid Search:**
 ```bash
 python grid_search.py
 ```
 
-This performs hyperparameter optimization:
-- Tests standard nnU-Net configuration
-- Finetunes INR head capacity (32/48/64 hidden dims)
-- Trains 5 total configurations for 100 epochs each
-- Saves results to `grid_search_results.json`
+**3D Grid Search:**
+```bash
+python grid_search_3d.py
+```
 
----
+Both perform hyperparameter optimization:
+- Test standard nnU-Net configurations
+- Finetune INR head capacity (32/48/64 hidden dims)
+- Train 5 total configurations
+- Save results to JSON files
 
-## 🏋️ Training
+**Grid Search Results (2D):**
 
-### Model Creation
+| Config | Dice (Ant) | Dice (Post) | Mean Dice | Parameters |
+|--------|------------|-------------|-----------|------------|
+| **No INR** | 0.839 | 0.805 | **0.822** | 7.76M |
+| INR-32 | 0.841 | 0.803 | 0.822 | 7.76M |
+| INR-48 | 0.841 | 0.805 | 0.823 | 7.77M |
+| **INR-64** | 0.842 | 0.802 | **0.822** | 7.77M |
 
+![Grid Search Analysis](finetuning_results/small_grid_search_analysis.png)
+*Figure: Comparison of different model configurations showing minimal impact of INR head on 2D performance*
+
+**Findings:**
+**2D Model:**
+```python
+from model2d import UNetnnUNetWithINR
+
+# Standard 2D nnU-Net (recommended for 2D)
+model = UNetnnUNetWithINR(
+    in_channels=1,
+    base_channels=32,
+    unet_depth=4,
+    num_classes=3,
+    deep_supervision=False,
+    use_inr=False  # Pure nnU-Net
+)
+
+# With INR head (experimental, minimal benefit)
+model = UNetnnUNetWithINR(
+    in_channels=1,
+    base_channels=32,
+    unet_depth=4,
+    num_classes=3,
+    deep_supervision=False,
+    use_inr=True,
+    inr_hidden_dim=64
+)
+```
+
+**3D Model (Recommended for Best Performance):**
+```python
+from unet_inr_3d import UNet3DWithINRBalanced
+
+# 3D nnU-Net with optional INR
+model = UNet3DWithINRBalanced(
+    in_channels=1,
+    num_classes=3,
+    use_inr=True,  # Coordinate-aware segmentation
+    inr_hidden_dim=64
+)
+
+# Available 3D variants:
+# - UNet3DWithINRLightweight: Faster inference
+# - UNet3DWithINRBalanced: Best accuracy/speed tradeoff
+# - UNet3DWithINR: Fully customizable
 ```python
 from model2d import UNetnnUNetWithINR
 
@@ -336,24 +456,40 @@ param_grid = {
     'learning_rate': [1e-4],      # Fixed: proven optimal
     'weight_decay': [1e-5],       # Fixed: light regularization
     'use_inr': [False, True],     # Compare with/without INR
-    'inr_hidden_dim': [32, 48, 64]  # INR capacity search
-}
-```
-
-**Total configurations**: 5
-- 1 baseline (no INR)
-- 4 with INR (3 hidden dims × 1 config)
-
-### Expected Runtime
-
-- **Per configuration**: ~2-3 hours (100 epochs on single GPU)
-- **Total grid search**: ~10-15 hours
-
-### Results Format
-
-Results are saved to `grid_search_results.json`:
-
-```json
+    'inr_hidden_dim': [32, 48, 64       # This file
+├── data_aug.py                         # 3D→2D preprocessing + augmentation
+├── model2d.py                          # 2D nnU-Net architectures
+├── unet_inr_3d.py                      # 3D nnU-Net architectures
+├── train2d.py                          # 2D training script
+├── train_3d.py                         # 3D training script (98.9% Dice!)
+├── grid_search.py                      # 2D hyperparameter optimization
+├── grid_search_3d.py                   # 3D hyperparameter optimization
+├── viz.py                              # 3D visualization (PyVista)
+├── viz_aug.py                          # 2D dataset visualization
+├── generate_architecture_diagram.py    # Creates architecture diagrams
+├── architecture.jpg                    # Custom architecture diagram
+├── dataset_2d/                         # Generated 2D slices
+│   ├── images/                         # img_XXXXXX.npy
+│   └── masks/                          # mask_XXXXXX.npy
+├── dataset2d_vis/                      # 2D visualization outputs
+│   ├── viz_elegant_grid.png
+│   ├── viz_detailed_sample.png
+│   └── viz_dataset_overview.png
+├── Task04_Hippocampus/                 # Original Medical Decathlon dataset
+│   ├── imagesTr/                       # Training volumes (3D NIfTI)
+│   ├── labelsTr/                       # Training labels (3D NIfTI)
+│   ├── imagesTs/                       # Test volumes
+│   └── dataset.json                    # Metadata
+├── results_hippocampus/                # 3D training results
+│   ├── best_model.pth                  # Best 3D model (98.9% Dice!)
+│   ├── history.json                    # Training history
+│   ├── config.json                     # Training config
+│   └── plots/                          # Training visualizations
+├── finetuning_results/                 # Grid search results
+│   ├── small_models_results.json       # 2D model comparisons
+│   └── small_grid_search_analysis.png  # Performance comparison
+├── checkpoints/                        # 2D model checkpoints
+└── __pycache__/       
 {
   "nnUNet_BC32_D4_NoINR_LR1e-04_WD1e-05": {
     "config": {...},
