@@ -37,51 +37,8 @@ The model uses **nnU-Net** architecture principles with modern best practices fo
 
 Our implementation follows nnU-Net's proven design principles optimized for medical imaging:
 
-```
-Input (1×128×128)
-    ↓
-┌─────────────────────────────────────────────────────────┐
-│  ENCODER                                                │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐│
-│  │ Conv 32  │→ │ Conv 64  │→ │ Conv 128 │→ │ Conv 256 ││
-│  │ InstNorm │  │ InstNorm │  │ InstNorm │  │ InstNorm ││
-│  │ LeakyReLU│  │ LeakyReLU│  │ LeakyReLU│  │ LeakyReLU││
-│  │ MaxPool  │  │ MaxPool  │  │ MaxPool  │  │ MaxPool  ││
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘│
-└─────────────────────────────────────────────────────────┘
-                        ↓
-                 ┌──────────────┐
-                 │  BOTTLENECK  │
-                 │  Conv 256    │
-                 │  InstNorm    │
-                 │  LeakyReLU   │
-                 └──────────────┘
-                        ↓
-┌─────────────────────────────────────────────────────────┐
-│  DECODER                                                │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐│
-│  │UpConv 256│← │UpConv 128│← │UpConv 64 │← │UpConv 32 ││
-│  │ InstNorm │  │ InstNorm │  │ InstNorm │  │ InstNorm ││
-│  │ LeakyReLU│  │ LeakyReLU│  │ LeakyReLU│  │ LeakyReLU││
-│  │+ Skip    │  │+ Skip    │  │+ Skip    │  │+ Skip    ││
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘│
-└─────────────────────────────────────────────────────────┘
-                        ↓
-              ┌──────────────────┐
-              │  SEGMENTATION    │
-              │  HEAD            │
-              │                  │
-              │  [Standard]      │
-              │  Conv 1×1 → 3    │
-              │                  │
-              │  OR [INR Head]   │
-              │  Coord Net       │
-              │  + SIREN         │
-              └──────────────────┘
-                        ↓
-              Output (3×128×128)
-              [Background, Anterior, Posterior]
-```
+![Architecture Diagram](architecture.jpg)
+*Figure: Detailed nnU-Net architecture showing encoder-decoder structure with skip connections and dual segmentation heads, with INR output head*
 
 ### Key Features
 
@@ -90,7 +47,7 @@ Input (1×128×128)
 | **Instance Normalization** | Normalizes per sample instead of per batch | Better for small batch medical imaging |
 | **Leaky ReLU** | α=0.01 negative slope | Prevents dying neurons |
 | **Skip Connections** | U-Net style concatenation | Preserves spatial details |
-| **Optional INR Head** | Implicit Neural Representation | Coordinate-aware segmentation |
+| **INR Head** | Implicit Neural Representation | Coordinate-aware segmentation |
 | **Deep Supervision** | Multi-scale loss computation | Better gradient flow |
 | **Mixed Precision (AMP)** | FP16 training | 2× faster training |
 
@@ -121,7 +78,27 @@ We provide three pre-configured variants optimized for different use cases:
 ```python
 # 1. Load 3D NIfTI volumes
 # 2. Resample to isotropic 128×128×128
-# 3. Extract 2D slices from axial/coronal/sagittal planes
+# 3.Architecture Components
+
+**Encoder Path (Downsampling)**
+- 4 encoder blocks with progressively increasing channels: 32 → 64 → 128 → 256
+- Each block: Conv3×3 → Instance Norm → Leaky ReLU → MaxPool2×2
+- Feature maps reduce spatially: 128×128 → 64×64 → 32×32 → 16×16 → 8×8
+
+**Bottleneck**
+- Deepest layer with 256 channels at 8×8 spatial resolution
+- Captures high-level semantic features
+
+**Decoder Path (Upsampling)**
+- 4 decoder blocks with progressively decreasing channels: 128 → 64 → 32 → 32
+- Each block: UpConv2×2 → Concatenate with encoder skip → Conv3×3 → Instance Norm → Leaky ReLU
+- Feature maps expand spatially: 8×8 → 16×16 → 32×32 → 64×64 → 128×128
+
+**Segmentation Head**
+- Standard: 1×1 convolution → 3 output channels (background, anterior, posterior)
+- Optional INR: SIREN-based coordinate network for implicit representation
+
+###  Extract 2D slices from axial/coronal/sagittal planes
 # 4. Sample max 15 slices per plane (with hippocampus)
 # 5. Apply augmentation (rotation, affine, flip)
 # 6. Save as .npy files
@@ -190,17 +167,17 @@ loss = 0.5 × DiceLoss + 0.5 × FocalLoss(γ=2.0)
 
 Our augmented dataset contains diverse 2D slices from multiple anatomical planes:
 
-![Elegant Grid](viz_elegant_grid.png)
+![Elegant Grid](dataset2d_vis/viz_elegant_grid.png)
 *Figure 1: Sample slices showing original MRI, overlay, and ground truth segmentation. Cyan indicates anterior hippocampus, magenta indicates posterior.*
 
 ### Detailed Sample Analysis
 
-![Detailed View](viz_detailed_sample.png)
+![Detailed View](dataset2d_vis/viz_detailed_sample.png)
 *Figure 2: Detailed view with statistics panel showing pixel coverage and intensity distributions.*
 
 ### Dataset Overview
 
-![Dataset Overview](viz_dataset_overview.png)
+![Dataset Overview](dataset2d_vis/viz_dataset_overview.png)
 *Figure 3: Random samples from the dataset demonstrating variation in hippocampus size, shape, and orientation.*
 
 ### 3D Visualization
