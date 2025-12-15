@@ -343,6 +343,12 @@ CONFIG = {
 
 **Sample Outputs:**
 
+![3D Side-by-Side Comparison](3D%20inf%20plots/Capture%20d'écran%202025-12-15%20114204.png)
+*Figure 5: Side-by-side comparison of ground truth (left, blocky) vs model prediction (right, smooth). Shows anterior (red) and posterior (cyan) hippocampus with excellent Dice score of 0.990.*
+
+![3D Error Analysis Overlay](3D%20inf%20plots/Capture%20d'écran%202025-12-15%20114718.png)
+*Figure 6: Three-panel error analysis showing ground truth, prediction, and overlay with color-coded errors. Green = correct, red = over-segmentation, blue = under-segmentation.*
+
 The scripts automatically compute and display segmentation metrics:
 
 ```
