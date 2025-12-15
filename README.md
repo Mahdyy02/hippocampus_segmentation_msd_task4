@@ -275,6 +275,92 @@ This generates an interactive 3D rendering using PyVista showing:
 ![3D Hippocampus Visualization](3D_vis.png)
 *Figure 4: 3D volumetric rendering of hippocampus structures within the brain, showing anatomical positioning and spatial relationships.*
 
+### 3D Inference Visualizations
+
+After training the 3D model, you can visualize model predictions against ground truth using our professional medical visualization tools:
+
+#### Side-by-Side Comparison
+
+```bash
+python viz_inf_3d.py
+```
+
+Creates a side-by-side comparison showing:
+- **Left Panel**: Ground Truth (blocky/voxel-like appearance)
+- **Right Panel**: Model Prediction (smooth/organic surfaces)
+- Both anterior and posterior hippocampus regions
+- Dice score metrics overlaid
+
+**Features:**
+- 🎨 Different mesh styles: Ground truth uses minimal smoothing to preserve original voxel structure, predictions use aggressive smoothing for organic appearance
+- 📊 Automatic Dice score computation and display
+- 🔗 Synchronized camera views for easy comparison
+- 💾 Saves high-resolution image to `visualization_3d_comparison.png`
+
+**Configuration** (in [viz_inf_3d.py](viz_inf_3d.py)):
+```python
+CONFIG = {
+    'checkpoint_path': 'results_hippocampus/best_model.pth',
+    'test_volume': 'Task04_Hippocampus/imagesTr/hippocampus_008.nii.gz',
+    'test_label': 'Task04_Hippocampus/labelsTr/hippocampus_008.nii.gz',
+    'target_size': (128, 128, 128),
+    'smoothing_sigma': 1.5,  # Surface smoothing
+    'mesh_smoothing_iter': 100,  # Mesh iterations
+}
+```
+
+#### Overlay Error Analysis
+
+```bash
+python visualize_3d_overlay.py
+```
+
+Creates a 3-panel overlay visualization showing:
+- **Left Panel**: Ground Truth segmentation
+- **Middle Panel**: Model Prediction
+- **Right Panel**: Error Analysis with color coding:
+  - 🟢 **Green**: True Positives (correct predictions)
+  - 🔴 **Red**: False Positives (over-segmentation)
+  - 🔵 **Blue**: False Negatives (under-segmentation)
+
+**Features:**
+- 🔍 Detailed error visualization highlighting prediction mistakes
+- 📈 Comprehensive metrics panel showing Dice scores
+- 🎯 Identifies specific regions of under/over-segmentation
+- 💾 Saves to `visualization_3d_overlay.png`
+
+**Configuration** (in [visualize_3d_overlay.py](visualize_3d_overlay.py)):
+```python
+CONFIG = {
+    'checkpoint_path': 'results_hippocampus/best_model.pth',
+    'test_volume': 'Task04_Hippocampus/imagesTr/hippocampus_008.nii.gz',
+    'test_label': 'Task04_Hippocampus/labelsTr/hippocampus_008.nii.gz',
+    'smoothing_sigma': 1.0,
+    'mesh_smoothing': 100,
+    'output_path': 'visualization_3d_overlay.png',
+}
+```
+
+**Sample Outputs:**
+
+The scripts automatically compute and display segmentation metrics:
+
+```
+================================================================================
+SEGMENTATION METRICS
+================================================================================
+Anterior Hippocampus Dice:  0.9909
+Posterior Hippocampus Dice: 0.9890
+Mean Dice Score:            0.9900
+================================================================================
+```
+
+**Tips:**
+- 💡 Change `test_volume` in CONFIG to visualize different test samples
+- 🎨 Adjust `smoothing_sigma` to control surface smoothness (0.5-2.0 range)
+- 🖼️ Set `save_image=False` for interactive 3D exploration instead of static image
+- ⚡ First run may take 1-2 minutes due to mesh generation and smoothing
+
 ---
 
 ## 🚀 Usage
